@@ -1,14 +1,14 @@
 """ Server. """
 
 import os
-import shutil
-import uuid
-import subprocess
-import json
 
 from flask import Flask, request
 from flask_cors import cross_origin, CORS
 from waitress import serve
+
+
+from mls_code_assessment import SessionManager
+
 
 app = Flask(__name__)
 
@@ -20,30 +20,13 @@ def rate_app():
     ## Receive binary .zip file
     content = request.data ## binary data
 
-    ## Unzip
+    s = SessionManager(content)
+    
+    s.run()
+    response = s.get_response()
+    s.clean()
 
-    path_head = str(uuid.uuid4())
-    local_path_head = './'+ path_head
-    os.mkdir(local_path_head)
-    file = open(local_path_head+'/tmp.zip', 'wb')
-    file.write(content)
-    file.close()
-
-    shutil.unpack_archive(local_path_head + '/tmp.zip', local_path_head)
-
-    files = os.listdir(local_path_head)
-    output = ""
-    for file in files:
-        # check file is folder
-        if os.path.isdir(local_path_head + '/' + file):
-            current_dir = os.getcwd() + '/' + path_head + '/' + file
-            try:
-                output = subprocess.check_output(
-                    ["pylint", "--recursive", "y", "--output-format", "json2", current_dir])
-            except subprocess.CalledProcessError as e:
-                output = e.output
-    shutil.rmtree(local_path_head)
-    return json.loads(output)
+    return response
 
 @app.route('/', methods=['GET', 'POST'])
 @cross_origin()
@@ -63,4 +46,4 @@ if __name__ == '__main__':
     if execution_mode == "prod":
         serve(app, host = HOST, port = PORT)
     else:
-        app.run(host = HOST, port = PORT, debug=False)
+        app.run(host = HOST, port = PORT, debug = False)

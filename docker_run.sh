@@ -1,0 +1,1 @@
+docker run -d --network mls-network --rm --name mls_toolbox_code_assessment mls_toolbox_code_assessment
