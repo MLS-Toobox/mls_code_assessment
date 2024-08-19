@@ -7,6 +7,7 @@ class SessionManager:
         self.app_zip = app_zip
         self.session_id = None
         self.result = None
+        self.full_report = None
     
     def __get_session_id(self):
         return str(uuid.uuid4())
@@ -28,16 +29,29 @@ class SessionManager:
 
         return local_path_head
     
-    def run(self):
+    def run_score(self):
         local_path_head = self.__create_session()
         self.result = {}
         for test in TESTS:
             test_object = test(self.session_id, local_path_head)
-            test_object.run()
-            self.result[test_object.get_id()] = test_object.get_result()
+            test_object.rate_app()
+            self.result[test_object.get_id()] = test_object.get_score()
+        
+    def run_report(self, test_id):
+        local_path_head = self.__create_session()
+        self.result = {}
+        for test in TESTS:
+            test_object = test(self.session_id, local_path_head)
+            if test_object.get_id() == test_id:
+                test_object = test(self.session_id, local_path_head)
+                test_object.run_report()
+                self.full_report = test_object.get_report()
     
     def get_response(self):
         return self.result
+
+    def get_report(self):
+        return self.full_report
 
     def clean(self):
         local_path_head = self.__get_session_path()
