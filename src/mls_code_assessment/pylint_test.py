@@ -9,6 +9,7 @@ class PyLintTest(CodeAssess):
     def __init__(self, session_id, local_path, **options):
         super().__init__(session_id, local_path)
         self.options = options
+        self.my_id = "PyLint"
 
     def rate_app(self):
         files = os.listdir(self.local_path)
@@ -44,8 +45,5 @@ class PyLintTest(CodeAssess):
                         ["pylint", "--recursive", "y", "--score","n", "--reports", "y",
                          "--disable", "E0401", "--clear-cache-post-run", "y", current_dir])
                 except subprocess.CalledProcessError as e:
-                    readable_output = e.output, "utf-8"
+                    readable_output = e.output
         self.full_report = readable_output
-    
-    def get_id(self):
-        return "PyLint"

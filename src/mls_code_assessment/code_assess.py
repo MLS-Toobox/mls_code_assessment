@@ -5,6 +5,7 @@ class CodeAssess:
         self.local_path = local_path
         self.result = {}
         self.full_report = None
+        self.my_id = "Generic Code Assessment"
 
     def rate_app(self):
         pass
@@ -19,4 +20,4 @@ class CodeAssess:
         return self.full_report
 
     def get_id(self):
-        return "Code Assess"
+        return self.my_id
