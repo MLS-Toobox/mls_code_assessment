@@ -32,7 +32,6 @@ class RadonMITest(CodeAssess):
                 t_ou = subprocess.check_output(
                     ["radon", "mi","-j", '.'])
                 json_data = dict(json.loads(t_ou))
-                print(json_data)
                 json_result["module_count"] = len(json_data)
                 score = 0.0
                 added_to_score = 0
@@ -48,8 +47,6 @@ class RadonMITest(CodeAssess):
                     elif value['rank'] == 'C':
                         json_result["message_count"]["Extremely low"] += 1
                 json_result["score"] = round(score/added_to_score, 2)
-                # json_output = t_ou
-                # print(json_output.decode("utf-8"))
         self.result = {
             "score": json_result["score"],
             "message_count": json_result["message_count"],

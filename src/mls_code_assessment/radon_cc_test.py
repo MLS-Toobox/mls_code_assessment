@@ -24,8 +24,6 @@ class RadonCCTest(CodeAssess):
                 blocks, complexity = t_ou.decode("utf-8").split("\n")[-3:-1]
                 blocks = int(blocks.split(" ")[0])
                 complexity_score = round(10/pow(float(complexity[:-1].split("(")[-1]), .3),2)
-                # json_output = t_ou
-                # print(json_output.decode("utf-8"))
         self.result = {
             "score": complexity_score,
             "message_count": [],
